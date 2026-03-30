@@ -13,7 +13,7 @@ useHead({
 <template>
   <div class="min-h-screen bg-[#eef2ff] text-slate-900">
     <div class="fixed inset-0 -z-10 overflow-hidden">
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.95),_rgba(236,242,255,0.92)_38%,_rgba(214,228,255,0.86)_66%,_rgba(191,219,254,0.78)_100%)]" />
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95),rgba(236,242,255,0.92)_38%,rgba(214,228,255,0.86)_66%,rgba(191,219,254,0.78)_100%)]" />
       <div class="absolute left-[-10%] top-[-12%] h-96 w-96 rounded-full bg-white/80 blur-3xl" />
       <div class="absolute right-[-8%] top-[10%] h-[28rem] w-[28rem] rounded-full bg-indigo-200/55 blur-3xl" />
       <div class="absolute bottom-[-10%] left-[22%] h-80 w-80 rounded-full bg-sky-100/70 blur-3xl" />
