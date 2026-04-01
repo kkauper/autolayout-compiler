@@ -11,9 +11,9 @@ useHead({
 </script>
 
 <template>
-  <div class="mx-auto flex min-h-screen w-full max-w-390 flex-col">
-      <div class="flex min-h-[calc(100vh-2rem)] flex-col overflow-hidden bg-white">
-        <header class="flex flex-col gap-4 border-b border-neutral-200 px-6 py-5 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+  <div class="mx-auto flex min-h-screen w-full max-w-7xl flex-col">
+      <div class="flex min-h-screen flex-col overflow-hidden bg-white">
+        <header class="flex flex-col gap-3 border-b border-neutral-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between lg:px-6">
           <div class="flex items-center gap-4">
             <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-black text-sm font-bold text-white">
               AC
@@ -41,7 +41,7 @@ useHead({
           </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto px-6 py-6 lg:px-8 lg:py-8">
+        <main class="flex-1 overflow-y-auto px-5 py-5 lg:px-6 lg:py-6">
           <slot />
         </main>
       </div>

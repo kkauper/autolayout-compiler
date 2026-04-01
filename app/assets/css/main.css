@@ -24,3 +24,19 @@ body {
 	color: var(--color-black);
 	font-family: var(--font-body);
 }
+
+.interactive-kicker {
+	font-family: var(--font-body);
+	letter-spacing: 0.2em;
+	font-size: 0.72rem;
+	line-height: 1;
+	transition: font-size 260ms ease, letter-spacing 260ms ease, transform 260ms ease, font-family 260ms ease;
+	transform-origin: left center;
+}
+
+.interactive-kicker:hover {
+	font-family: var(--font-condensed);
+	font-size: 1.45rem;
+	letter-spacing: -0.02em;
+	transform: translateY(-2px);
+}

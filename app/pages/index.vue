@@ -1140,83 +1140,64 @@ const generatedCss = computed(() => {
 </script>
 
 <template>
-  <section class="space-y-6">
-    <div class="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-      <div class="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-        <div class="max-w-3xl space-y-4">
-          <span class="inline-flex rounded-full border border-neutral-200 bg-neutral-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.24em] text-neutral-500">
-            Design compiler workspace
-          </span>
-
-          <div class="space-y-3">
-            <h2 class="text-4xl font-black tracking-tight text-black sm:text-5xl">
-              Turn Figma auto-layout into clean, reviewable front-end code.
-            </h2>
-            <p class="max-w-2xl text-base leading-7 text-neutral-500 sm:text-lg">
-              Start from a Figma file URL, an uploaded image, or copied design payload. Then rebuild the structure with
-              <span class="font-bold text-black">flexbox</span>
-              or
-              <span class="font-bold text-black">grid</span>
-              and export either
-              <span class="font-bold text-black">Tailwind</span>
-              or plain HTML/CSS.
-            </p>
-          </div>
-
-          <div class="grid gap-3 sm:grid-cols-3">
-            <div class="rounded-2xl border border-neutral-200 bg-neutral-100 p-4">
-              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Source</p>
-              <p class="mt-2 text-sm font-medium text-black">Figma API, screenshots, or copied layout data</p>
-            </div>
-            <div class="rounded-2xl border border-neutral-200 bg-neutral-100 p-4">
-              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Rebuild</p>
-              <p class="mt-2 text-sm font-medium text-black">Translate sizing, spacing, and alignment rules</p>
-            </div>
-            <div class="rounded-2xl border border-neutral-200 bg-neutral-100 p-4">
-              <p class="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">Export</p>
-              <p class="mt-2 text-sm font-medium text-black">Preview the result and inspect generated code</p>
-            </div>
-          </div>
+  <section class="mx-auto w-full max-w-7xl space-y-6">
+    <div class="rounded-4xl border border-neutral-200 bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:p-6">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="space-y-2">
+          <p class="interactive-kicker text-[11px] font-bold uppercase tracking-[0.22em] text-neutral-500">Design compiler workspace</p>
+          <h2 class="text-2xl font-black tracking-tight text-black sm:text-3xl">
+            Turn Figma auto-layout into clean, reviewable front-end code.
+          </h2>
+          <p class="max-w-3xl text-sm leading-6 text-neutral-500 sm:text-base">
+            Add a source, choose how to rebuild it, and inspect preview plus export code. The workflow below now follows a contextual step-by-step guide.
+          </p>
         </div>
+
+        <a
+          href="https://github.com/kkauper/autolayout-compiler"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex shrink-0 items-center justify-center rounded-full bg-black px-4 py-2 text-sm font-semibold text-white transition hover:bg-neutral-800"
+        >
+          View GitHub Repo
+        </a>
       </div>
 
-      <div class="rounded-[2rem] border border-neutral-200 bg-neutral-100 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-        <div class="flex h-full flex-col justify-between gap-6">
-          <div class="space-y-3">
-            <p class="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500">Pipeline overview</p>
-            <h3 class="text-2xl font-black tracking-tight text-black">From auto-layout metadata to production-ready components</h3>
-            <p class="text-sm leading-6 text-neutral-500">
-              The workspace below separates source ingestion, reconstruction controls, preview rendering, and code export so users can compare the raw Figma structure against the final implementation.
-            </p>
+      <details class="mt-4 rounded-2xl border border-neutral-200 bg-neutral-100 p-4">
+        <summary class="cursor-pointer list-none text-sm font-bold text-black">Show workflow overview</summary>
+        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+          <div class="rounded-2xl border border-neutral-200 bg-white p-4">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Step 1 · Source</p>
+            <p class="mt-2 text-sm font-medium text-black">Figma API, screenshot upload, or copied payload</p>
           </div>
-
-          <div class="grid gap-4 sm:grid-cols-3">
-            <div class="rounded-2xl bg-white p-4 ring-1 ring-neutral-200">
-              <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-sm font-black text-white">1</div>
-              <p class="text-sm font-bold text-black">Import design</p>
-              <p class="mt-1 text-sm text-neutral-500">Fetch Figma nodes or upload a visual reference.</p>
-            </div>
-            <div class="rounded-2xl bg-white p-4 ring-1 ring-neutral-200">
-              <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-sm font-black text-white">2</div>
-              <p class="text-sm font-bold text-black">Rebuild structure</p>
-              <p class="mt-1 text-sm text-neutral-500">Choose flexbox or grid for the generated layout.</p>
-            </div>
-            <div class="rounded-2xl bg-white p-4 ring-1 ring-neutral-200">
-              <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-sm font-black text-white">3</div>
-              <p class="text-sm font-bold text-black">Inspect output</p>
-              <p class="mt-1 text-sm text-neutral-500">Preview the component and copy the matching code.</p>
-            </div>
+          <div class="rounded-2xl border border-neutral-200 bg-white p-4">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Step 2 · Settings</p>
+            <p class="mt-2 text-sm font-medium text-black">Choose layout engine and output format</p>
+          </div>
+          <div class="rounded-2xl border border-neutral-200 bg-white p-4">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Step 3 · Preview + Code</p>
+            <p class="mt-2 text-sm font-medium text-black">Inspect visual output and copy generated code</p>
           </div>
         </div>
-      </div>
+      </details>
     </div>
 
-    <div class="grid gap-6 2xl:grid-cols-[minmax(0,0.95fr)_minmax(0,0.8fr)_minmax(0,1.1fr)] xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-      <section class="rounded-[2rem] border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+    <div class="grid gap-6 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+      <div class="space-y-6">
+        <section class="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <p class="interactive-kicker text-[11px] font-bold uppercase tracking-[0.24em] text-neutral-500">Contextual flow</p>
+          <ol class="mt-4 space-y-3">
+            <li class="rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-sm text-neutral-500"><span class="font-bold text-black">1.</span> Add source data</li>
+            <li class="rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-sm text-neutral-500"><span class="font-bold text-black">2.</span> Configure layout and export mode</li>
+            <li class="rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-sm text-neutral-500"><span class="font-bold text-black">3.</span> Validate preview and copy code</li>
+          </ol>
+        </section>
+
+      <section class="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500">Source inputs</p>
-            <h3 class="mt-2 text-2xl font-black tracking-tight text-black">Add your Figma source</h3>
+            <h3 class="mt-2 text-xl font-black tracking-tight text-black">Step 1 · Add your source</h3>
           </div>
           <span class="rounded-full bg-black px-3 py-1.5 text-xs font-bold tracking-wide text-white">01</span>
         </div>
@@ -1388,11 +1369,11 @@ const generatedCss = computed(() => {
         </div>
       </section>
 
-      <section class="rounded-[2rem] border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <section class="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500">Compiler controls</p>
-            <h3 class="mt-2 text-2xl font-black tracking-tight text-black">Rebuild the element</h3>
+            <h3 class="mt-2 text-xl font-black tracking-tight text-black">Step 2 · Configure rebuild</h3>
           </div>
           <span class="rounded-full bg-black px-3 py-1.5 text-xs font-bold tracking-wide text-white">02</span>
         </div>
@@ -1466,22 +1447,23 @@ const generatedCss = computed(() => {
           </div>
         </div>
       </section>
+      </div>
 
-      <section class="rounded-[2rem] border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)] xl:col-span-2 2xl:col-span-1">
+      <section class="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500">Preview and code</p>
-            <h3 class="mt-2 text-2xl font-black tracking-tight text-black">See the rebuilt component</h3>
+            <h3 class="mt-2 text-2xl font-black tracking-tight text-black">Step 3 · Inspect output</h3>
           </div>
           <span class="rounded-full bg-black px-3 py-1.5 text-xs font-bold tracking-wide text-white">03</span>
         </div>
 
-        <div class="mt-6 space-y-5">
+        <div class="mt-6 space-y-6">
           <div class="rounded-[1.75rem] bg-neutral-100 p-5 ring-1 ring-neutral-200">
             <p class="text-xs font-bold uppercase tracking-[0.22em] text-neutral-500">Live preview</p>
 
             <div class="mt-4 space-y-4 rounded-[28px] bg-white p-5 ring-1 ring-neutral-200">
-              <div class="overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4">
+              <div class="min-h-70 overflow-auto rounded-2xl border border-neutral-200 bg-white p-4 sm:min-h-85">
                 <div v-html="previewInlineHtml" />
               </div>
 
@@ -1503,7 +1485,7 @@ const generatedCss = computed(() => {
                 <p class="text-sm font-bold text-white">HTML</p>
                 <span class="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-neutral-400">{{ outputMode === 'tailwind' ? 'Tailwind classes' : 'Semantic markup' }}</span>
               </div>
-              <pre class="overflow-x-auto px-4 py-4 text-xs leading-6 text-neutral-400"><code>{{ generatedHtml }}</code></pre>
+              <pre class="max-h-115 min-h-75 overflow-auto px-4 py-4 text-xs leading-6 text-neutral-400"><code>{{ generatedHtml }}</code></pre>
             </div>
 
             <div class="overflow-hidden rounded-[1.75rem] bg-black">
@@ -1511,7 +1493,7 @@ const generatedCss = computed(() => {
                 <p class="text-sm font-bold text-white">CSS</p>
                 <span class="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-neutral-400">{{ outputMode === 'tailwind' ? 'Optional' : 'Required' }}</span>
               </div>
-              <pre class="overflow-x-auto px-4 py-4 text-xs leading-6 text-neutral-400"><code>{{ generatedCss }}</code></pre>
+              <pre class="max-h-115 min-h-75 overflow-auto px-4 py-4 text-xs leading-6 text-neutral-400"><code>{{ generatedCss }}</code></pre>
             </div>
           </div>
         </div>
