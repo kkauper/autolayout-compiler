@@ -132,6 +132,7 @@ const uploadedImageType = ref('')
 const uploadedImageSize = ref(0)
 const uploadedImageUrl = ref('')
 const uploadedImageAnalysis = ref<ImageAnalysis | null>(null)
+const activeCopyTooltip = ref<'html' | 'css' | null>(null)
 const pastedPayload = ref(`{
   "layoutMode": "HORIZONTAL",
   "primaryAxisSizingMode": "AUTO",
@@ -265,6 +266,7 @@ const fallbackNode = computed<FigmaSceneNode>(() => {
 })
 
 const activeNode = computed<FigmaSceneNode>(() => figmaResponse.value?.node || (sourceMode.value === 'image-upload' ? uploadedImageNode.value : null) || fallbackNode.value)
+let copyTooltipTimeout: ReturnType<typeof setTimeout> | null = null
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value))
@@ -683,7 +685,57 @@ function onImageDrop(event: DragEvent) {
   void handleImageFile(event.dataTransfer?.files?.[0] || null)
 }
 
+function showCopyTooltip(target: 'html' | 'css') {
+  activeCopyTooltip.value = target
+
+  if (copyTooltipTimeout) {
+    clearTimeout(copyTooltipTimeout)
+  }
+
+  copyTooltipTimeout = setTimeout(() => {
+    activeCopyTooltip.value = null
+  }, 2200)
+}
+
+async function copyToClipboard(value: string, target: 'html' | 'css') {
+  if (!import.meta.client) {
+    return
+  }
+
+  let copied = false
+
+  if (navigator?.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value)
+      copied = true
+    }
+    catch {
+      copied = false
+    }
+  }
+
+  if (!copied) {
+    const helper = document.createElement('textarea')
+    helper.value = value
+    helper.setAttribute('readonly', 'true')
+    helper.style.position = 'fixed'
+    helper.style.opacity = '0'
+    document.body.appendChild(helper)
+    helper.select()
+    copied = document.execCommand('copy')
+    document.body.removeChild(helper)
+  }
+
+  if (copied) {
+    showCopyTooltip(target)
+  }
+}
+
 onBeforeUnmount(() => {
+  if (copyTooltipTimeout) {
+    clearTimeout(copyTooltipTimeout)
+  }
+
   if (uploadedImageUrl.value && import.meta.client) {
     URL.revokeObjectURL(uploadedImageUrl.value)
   }
@@ -1141,59 +1193,11 @@ const generatedCss = computed(() => {
 
 <template>
   <section class="mx-auto w-full max-w-7xl space-y-6">
-    <div class="rounded-4xl border border-neutral-200 bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:p-6">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div class="space-y-2">
-          <p class="interactive-kicker text-[11px] font-bold uppercase tracking-[0.22em] text-neutral-500">Design compiler workspace</p>
-          <h2 class="text-2xl font-black tracking-tight text-black sm:text-3xl">
-            Turn Figma auto-layout into clean, reviewable front-end code.
-          </h2>
-          <p class="max-w-3xl text-sm leading-6 text-neutral-500 sm:text-base">
-            Add a source, choose how to rebuild it, and inspect preview plus export code. The workflow below now follows a contextual step-by-step guide.
-          </p>
-        </div>
 
-        <a
-          href="https://github.com/kkauper/autolayout-compiler"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex shrink-0 items-center justify-center rounded-full bg-black px-4 py-2 text-sm font-semibold text-white transition hover:bg-neutral-800"
-        >
-          View GitHub Repo
-        </a>
-      </div>
+    <div class="flex flex-col gap-6">
+      <div class="flex flex-row gap-6">
 
-      <details class="mt-4 rounded-2xl border border-neutral-200 bg-neutral-100 p-4">
-        <summary class="cursor-pointer list-none text-sm font-bold text-black">Show workflow overview</summary>
-        <div class="mt-4 grid gap-3 sm:grid-cols-3">
-          <div class="rounded-2xl border border-neutral-200 bg-white p-4">
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Step 1 · Source</p>
-            <p class="mt-2 text-sm font-medium text-black">Figma API, screenshot upload, or copied payload</p>
-          </div>
-          <div class="rounded-2xl border border-neutral-200 bg-white p-4">
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Step 2 · Settings</p>
-            <p class="mt-2 text-sm font-medium text-black">Choose layout engine and output format</p>
-          </div>
-          <div class="rounded-2xl border border-neutral-200 bg-white p-4">
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Step 3 · Preview + Code</p>
-            <p class="mt-2 text-sm font-medium text-black">Inspect visual output and copy generated code</p>
-          </div>
-        </div>
-      </details>
-    </div>
-
-    <div class="grid gap-6 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-      <div class="space-y-6">
-        <section class="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-          <p class="interactive-kicker text-[11px] font-bold uppercase tracking-[0.24em] text-neutral-500">Contextual flow</p>
-          <ol class="mt-4 space-y-3">
-            <li class="rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-sm text-neutral-500"><span class="font-bold text-black">1.</span> Add source data</li>
-            <li class="rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-sm text-neutral-500"><span class="font-bold text-black">2.</span> Configure layout and export mode</li>
-            <li class="rounded-2xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-sm text-neutral-500"><span class="font-bold text-black">3.</span> Validate preview and copy code</li>
-          </ol>
-        </section>
-
-      <section class="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <section class="w-1/2 rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500">Source inputs</p>
@@ -1369,7 +1373,7 @@ const generatedCss = computed(() => {
         </div>
       </section>
 
-      <section class="rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <section class="w-1/2 rounded-4xl border border-neutral-200 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500">Compiler controls</p>
@@ -1423,28 +1427,9 @@ const generatedCss = computed(() => {
             </div>
           </div>
 
-          <div class="rounded-[1.75rem] bg-black p-5 text-white">
-            <p class="text-xs font-bold uppercase tracking-[0.24em] text-neutral-500">Active pipeline</p>
-            <h4 class="mt-3 text-xl font-black">{{ compilerTitle }}</h4>
-            <p class="mt-3 text-sm leading-6 text-neutral-400">
-              The compiler maps padding, item gaps, alignment, and sizing into a responsive component structure and keeps the generated code synchronized with the visual preview.
-            </p>
-
-            <div class="mt-5 grid gap-3 sm:grid-cols-2">
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p class="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">Detected direction</p>
-                <p class="mt-2 text-sm font-bold">{{ layoutMode === 'flexbox' ? 'Horizontal / vertical stack' : 'Structured columns / rows' }}</p>
-              </div>
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p class="text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">Export format</p>
-                <p class="mt-2 text-sm font-bold">{{ outputMode === 'tailwind' ? 'Tailwind utility classes' : 'Separate HTML and CSS' }}</p>
-              </div>
-            </div>
-
-            <button class="mt-6 inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-bold text-black transition hover:bg-neutral-100">
-              Rebuild selected element
-            </button>
-          </div>
+          <button class="inline-flex rounded-full bg-black px-5 py-2.5 text-sm font-bold text-white transition hover:bg-neutral-800">
+            Rebuild selected element
+          </button>
         </div>
       </section>
       </div>
@@ -1483,7 +1468,23 @@ const generatedCss = computed(() => {
             <div class="overflow-hidden rounded-[1.75rem] bg-black">
               <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
                 <p class="text-sm font-bold text-white">HTML</p>
-                <span class="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-neutral-400">{{ outputMode === 'tailwind' ? 'Tailwind classes' : 'Semantic markup' }}</span>
+                <div class="flex items-center gap-2">
+                  <span class="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-neutral-400">{{ outputMode === 'tailwind' ? 'Tailwind classes' : 'Semantic markup' }}</span>
+                  <div class="relative inline-flex items-center">
+                    <button
+                      class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-neutral-200 transition hover:bg-white/20"
+                      type="button"
+                      aria-label="Copy HTML output"
+                      title="Copy HTML"
+                      @click="copyToClipboard(generatedHtml, 'html')"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4">
+                        <path d="M16 1a2 2 0 0 1 2 2v2h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3v-1H5a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3h11Zm3 6H9a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1ZM16 3H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h1V8a3 3 0 0 1 3-3h7V3Z" />
+                      </svg>
+                    </button>
+                    <span v-if="activeCopyTooltip === 'html'" class="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-xs font-medium text-black shadow-sm">Copied to clipboard</span>
+                  </div>
+                </div>
               </div>
               <pre class="max-h-115 min-h-75 overflow-auto px-4 py-4 text-xs leading-6 text-neutral-400"><code>{{ generatedHtml }}</code></pre>
             </div>
@@ -1491,7 +1492,23 @@ const generatedCss = computed(() => {
             <div class="overflow-hidden rounded-[1.75rem] bg-black">
               <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
                 <p class="text-sm font-bold text-white">CSS</p>
-                <span class="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-neutral-400">{{ outputMode === 'tailwind' ? 'Optional' : 'Required' }}</span>
+                <div class="flex items-center gap-2">
+                  <span class="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-neutral-400">{{ outputMode === 'tailwind' ? 'Optional' : 'Required' }}</span>
+                  <div class="relative inline-flex items-center">
+                    <button
+                      class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-neutral-200 transition hover:bg-white/20"
+                      type="button"
+                      aria-label="Copy CSS output"
+                      title="Copy CSS"
+                      @click="copyToClipboard(generatedCss, 'css')"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4">
+                        <path d="M16 1a2 2 0 0 1 2 2v2h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3v-1H5a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3h11Zm3 6H9a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1ZM16 3H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h1V8a3 3 0 0 1 3-3h7V3Z" />
+                      </svg>
+                    </button>
+                    <span v-if="activeCopyTooltip === 'css'" class="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-xs font-medium text-black shadow-sm">Copied to clipboard</span>
+                  </div>
+                </div>
               </div>
               <pre class="max-h-115 min-h-75 overflow-auto px-4 py-4 text-xs leading-6 text-neutral-400"><code>{{ generatedCss }}</code></pre>
             </div>

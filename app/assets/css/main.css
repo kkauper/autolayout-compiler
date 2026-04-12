@@ -20,7 +20,7 @@
 
 html,
 body {
-	background: var(--color-gray-light);
+	background: var(--color-white);
 	color: var(--color-black);
 	font-family: var(--font-body);
 }
